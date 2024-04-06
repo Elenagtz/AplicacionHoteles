@@ -1,11 +1,10 @@
-import { Text, View, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Dimensions, ScrollView,FlatList } from 'react-native';
 import React, { useState, useContext, useEffect } from 'react';
 import { Image } from '@rneui/base';
-import { FlatList } from 'react-native-gesture-handler';
+//import { FlatList } from 'react-native-gesture-handler';
 import FlatListRestaurant from './componentesRest/FlatListRestaurant';
 import {DataContext} from '../cartshop/DataContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CartShop from '../cartshop/CartShop';
 import axios from 'axios';
 
 const { height } = Dimensions.get('window');
@@ -17,8 +16,8 @@ export default function Restaurant(props) {
 
     const { cartItems, addItemToCart, updateCartItem } = useContext(DataContext); 
 
-                    const agregarCarrito = (item, quantity) => {
-                        const itemIndex = cartItems.findIndex(cartItem => cartItem.id === item.id);
+                     const agregarCarrito = (item, quantity) => {
+                        const itemIndex = cartItems.findIndex(cartItem => cartItem.id_producto === item.id_producto);
                         if (itemIndex !== -1) {
                             const updatedCartIntems = [...cartItems];
                            
@@ -36,7 +35,7 @@ export default function Restaurant(props) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 console.log('Token:', token);
-                const response = await axios.get('http://192.168.108.94:8080/api/elemento/', {
+                const response = await axios.get('http://192.168.1.76:8080/api/elemento/', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -92,7 +91,7 @@ export default function Restaurant(props) {
                     imagen_elemento={{uri: item.imagen_elemento}}
                     action={() => item.action()}
                     customAction={(quantity) => agregarCarrito(item, quantity)}
-                    navigation={navigation}
+                   navigation={navigation}
 
                    
                 />)}

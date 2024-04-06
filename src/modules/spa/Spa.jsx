@@ -17,20 +17,20 @@ export default function Spa(props) {
 
     const { cartItems, addItemToCart, updateCartItem } = useContext(DataContext); 
 
-                    const agregarCarrito = (item, quantity) => {
-                        const itemIndex = cartItems.findIndex(cartItem => cartItem.id === item.id);
-                        if (itemIndex !== -1) {
-                            const updatedCartItems = [...cartItems];
-                           
-                            updatedCartItems[itemIndex].quantity += quantity;
-                            
-                            updateCartItem(updatedCartItems[itemIndex]);
-                            
-                        } else {
-                            addItemToCart({ ...item, quantity });
-                        }
-                        navigation.navigate('CartShop');
-                    };
+    const agregarCarrito = (item, quantity) => {
+        const itemIndex = cartItems.findIndex(cartItem => cartItem.id_producto === item.id_producto);
+        if (itemIndex !== -1) {
+            const updatedCartIntems = [...cartItems];
+           
+            updatedCartIntems[itemIndex].quantity += quantity;
+            
+            updateCartItem(updatedCartIntems[itemIndex]);
+            
+        } else {
+            addItemToCart({ ...item, quantity });
+        }
+        navigation.navigate('CartShop');
+    };
    
 
 
@@ -39,7 +39,7 @@ export default function Spa(props) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 console.log('Token:', token);
-                const response = await axios.get('http://192.168.108.94:8080/api/elemento/', {
+                const response = await axios.get('http://192.168.1.76:8080/api/elemento/', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -84,6 +84,7 @@ export default function Spa(props) {
                 data={elements}
                 renderItem={({ item }) => (
                 <FlatListSpa 
+                   
                     nombre_producto={item.nombre_producto}
                     descripcion={item.descripcion}
                     precio={`$${item.precio}`}

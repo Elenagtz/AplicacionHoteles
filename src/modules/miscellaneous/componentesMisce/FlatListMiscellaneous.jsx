@@ -4,7 +4,7 @@ import { Image } from '@rneui/base'
 
 
 export default function FlatListMiscellaneous(props) {
-    const {id, nombre_producto, precio, imagen_elemento, customAction, total} = props;
+    const {id, nombre_producto, precio, imagen_elemento, customAction} = props;
     const [quantity, setQuantity] = useState(1);
 
     const increaseQuantity = () => {

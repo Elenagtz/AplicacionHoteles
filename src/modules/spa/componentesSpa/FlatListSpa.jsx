@@ -3,8 +3,9 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Image } from '@rneui/base';
 
 export default function FlatListSpa(props) {
-    const {id, nombre_producto, descripcion, precio, imagen_elemento, customAction, action} = props;
+    const {id_producto, nombre_producto, descripcion, precio, imagen_elemento, customAction, action} = props;
     return (
+        
         <View style={styles.row}>
             <Image
                 source={imagen_elemento}

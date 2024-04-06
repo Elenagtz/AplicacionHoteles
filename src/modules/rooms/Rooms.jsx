@@ -17,7 +17,7 @@ export default function Rooms(props) {
     const { cartItems, addItemToCart, updateCartItem } = useContext(DataContext); 
 
                     const agregarCarrito = (item, quantity) => {
-                        const itemIndex = cartItems.findIndex(cartItem => cartItem.id === item.id);
+                        const itemIndex = cartItems.findIndex(cartItem => cartItem.id_habitacion === item.id_habitacion);
                         if (itemIndex !== -1) {
                             const updatedCartIntems = [...cartItems];
                            
@@ -66,7 +66,7 @@ export default function Rooms(props) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 console.log('Token:', token);
-                const response = await axios.get('http://192.168.108.94:8080/api/habitacion/', {
+                const response = await axios.get('http://192.168.1.76:8080/api/habitacion/', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -118,14 +118,13 @@ export default function Rooms(props) {
                 renderItem={({ item }) => (
                     <FlatListRoom
                     tipoHabitacion={item.nombreHabitacion}
-                    cant_camas={item.cant_camas}
-                    capacidad={item.capacidad}
-                    num_habitacion={item.num_habitacion}
-                    precio={item.precio}
+                    cant_camas={`Cant. de camas{item.cant_camas}`}
+                    capacidad={`Capacidad ${item.capacidad}`}
+                    num_habitacion={`Num. de habitacion: ${item.num_habitacion}`}
+                    precio={`$${item.precio}`}
                     imagen_hab={item.imagen_hab}
                     action={() => item.action()}
-                    customAction={() => (item)}
-                    />
+                    customAction={(quantity) => agregarCarrito(item, quantity)}                    />
             )}
 
                 

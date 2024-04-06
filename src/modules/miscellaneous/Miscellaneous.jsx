@@ -16,16 +16,17 @@ export default function Miscellaneous(props) {
 
     const [elements, setElements] = useState([]);
 
+
     const { cartItems, addItemToCart, updateCartItem } = useContext(DataContext); 
 
-                    const agregarCarrito = (item, quantity) => {
-                        const itemIndex = cartItems.findIndex(cartItem => cartItem.id === item.id);
+                     const agregarCarrito = (item, quantity) => {
+                        const itemIndex = cartItems.findIndex(cartItem => cartItem.id_producto === item.id_producto);
                         if (itemIndex !== -1) {
-                            const updatedCartItems = [...cartItems];
+                            const updatedCartIntems = [...cartItems];
                            
-                            updatedCartItems[itemIndex].quantity += quantity;
+                            updatedCartIntems[itemIndex].quantity += quantity;
                             
-                            updateCartItem(updatedCartItems[itemIndex]);
+                            updateCartItem(updatedCartIntems[itemIndex]);
                             
                         } else {
                             addItemToCart({ ...item, quantity });
@@ -37,7 +38,7 @@ export default function Miscellaneous(props) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 console.log('Token:', token);
-                const response = await axios.get('http://192.168.108.94:8080/api/elemento/', {
+                const response = await axios.get('http://192.168.1.76:8080/api/elemento/', {
                     
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -49,7 +50,7 @@ export default function Miscellaneous(props) {
                 if (response && response.status === 200 && response.data && response.data.data && Array.isArray(response.data.data)) {
                     console.log('Data received:', response.data.data);
     
-                    // categoria_id igual a 2
+                    // categoria_id igual a 3
                     const filteredData = response.data.data.filter(item => item.categoria.id_categoria === 3);
     
                     setElements(filteredData);
@@ -61,6 +62,7 @@ export default function Miscellaneous(props) {
                 console.error('Error fetching elements:', error);
             }
         };
+    
     
         fetchElements();
     }, []);
@@ -76,7 +78,7 @@ export default function Miscellaneous(props) {
                     resizeMode="cover"
                 />
                 <View style={styles.textContainer}>
-                    <Text style={styles.text}>Miscelaneos</Text>
+                    <Text style={styles.text}>Miscelaneos</Text>    
                 </View>
             </View>
             <FlatList
@@ -84,7 +86,7 @@ export default function Miscellaneous(props) {
                 renderItem={({item}) =>(
                     <FlatListMiscellaneous
                         nombre_producto={item.nombre_producto}
-                        precio={item.precio}
+                        precio={`$${item.precio}`}
                         imagen_elemento={{uri: item.imagen_elemento}}
                         action={() => item.action()}
                         customAction={(quantity) => agregarCarrito(item, quantity)} 
@@ -96,6 +98,7 @@ export default function Miscellaneous(props) {
             />
 
         </View>
+    
     );
 }
 

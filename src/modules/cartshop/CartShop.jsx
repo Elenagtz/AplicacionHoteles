@@ -12,34 +12,32 @@ import _ from "lodash";
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 
-
-// const Item = ({item}) => (
-//   <View style={styles.row}>
-//              <Image source={{uri: item.imagen_elemento}} style={styles.imageCard} /> 
+const Item = ({item}) => (
+  <View style={styles.row}>
+              <Image source={{uri: item.imagen_elemento}} style={styles.imageCard} /> 
             
 
-//             <View>
-//               <Text style={styles.t_habitacion}>{item.nombre_producto}</Text>
+             <View>
+               <Text style={styles.t_habitacion}>{item.nombre_producto}</Text>
+               <Text style={styles.textDescription}>{descriptionSnippet}</Text>
+            
 
-//               <Text style={styles.textDescription}>{descriptionSnippet}</Text>
-             
+               <View style={{ flexDirection: "row", alignItems: "center" }}>
+                 <Text style={styles.precio}>Cantidad: {item.quantity} </Text>
+                 <Text style={styles.precio}>
+                   Precio Total: ${calculateTotalPrice(item) }
+                </Text>
+               </View>
 
-//               <View style={{ flexDirection: "row", alignItems: "center" }}>
-//                 <Text style={styles.precio}>Cantidad: {item.quantity} </Text>
-//                 <Text style={styles.precio}>
-//                   Precio Total: ${calculateTotalPrice(item) }
-//                 </Text>
-//               </View>
-
-//               <TouchableOpacity
-//                 style={styles.detailsButton}
-//                 onPress={() => removeCartItem(item)}
-//               >
-//                 <Text style={styles.detailsButtonText}>Eliminar</Text>
-//               </TouchableOpacity>
-//             </View>
-//           </View>
-// )
+               <TouchableOpacity
+                 style={styles.detailsButton}
+                 onPress={() => removeCartItem(item)}
+              >
+                 <Text style={styles.detailsButtonText}>Eliminar</Text>
+               </TouchableOpacity>
+             </View>
+           </View>
+)
 
 
 export default function CartShop({ route, navigation }) {
@@ -52,9 +50,14 @@ export default function CartShop({ route, navigation }) {
     let subtotal = 0;
     cartItems.forEach(item => {
         if (typeof item.precio === 'number') {
-            subtotal += item.categoria.id_categoria === 2 || item.categoria.id_categoria === 3
+          if(item===item.categoria){
+                subtotal += item.categoria.nombrecategoria === 'Restaurante' || item.categoria.nombrecategoria === 'Miscelaneos'
                 ? item.quantity * item.precio
                 : item.precio;
+          }else{
+            subtotal += item.precio;
+          }
+            
         }
     });
     return subtotal.toFixed(2);
@@ -78,13 +81,14 @@ export default function CartShop({ route, navigation }) {
       } else {
         return '0.00'; // Otra acción si el precio o la cantidad no son válidos
       }
+
     };
     console.log("Aqui va bien");
     const totalPrice = calculateTotalPrice(item);
 
     let response;
-
-    switch (item.categoria.id_categoria) {
+if(item.categoria){
+switch (item.categoria.id_categoria) {
       case 1:
         response =
           <View style={styles.row}>
@@ -118,7 +122,11 @@ export default function CartShop({ route, navigation }) {
             <Text style={styles.t_habitacion}>{item.nombre_producto}</Text>
 
             <Text style={styles.textDescription}>{descriptionSnippet}</Text>
-            <Text style={styles.precio}>{`$${item.precio}`}</Text>
+            <Text style={styles.precio}>Cantidad: {item.quantity} </Text>
+                <Text style={styles.precio}>
+                  Precio Total: ${calculateTotalPrice(item) }
+                </Text>
+
             <TouchableOpacity
               style={styles.detailsButton}
             onPress={() => removeCartItem(item)}
@@ -127,7 +135,7 @@ export default function CartShop({ route, navigation }) {
             </TouchableOpacity>
           </View>
          
-        </View>;
+        </View>
 
         ;
         console.log(response);
@@ -153,28 +161,40 @@ export default function CartShop({ route, navigation }) {
           </View>
         ;
         break;
-      case 4:
-        response =
-          <View style={styles.row}>
-                        <Image source={item.img} style={styles.imageCard} />
+      
+    } //como vas? u ya ma nu u
+  }else{
+    console.log("Aqui va la habitacion");
+    response =
+    <View style={styles.row}>
+            
+    <Image source={{uri: item.imagen_hab}} style={styles.imageCard} />
 
-            <View>
-              <Text style={styles.t_habitacion}>{item.title}</Text>
-            </View>
-            <Text style={styles.precio}>Cantidad: {item.quantity} </Text>
-                <Text style={styles.precio}>
-                  Precio Total: ${calculateTotalPrice(item) }
-                </Text>
-                <TouchableOpacity
-                style={styles.detailsButton}
-                onPress={() => removeCartItem(item)}
-              >
-                <Text style={styles.detailsButtonText}>Eliminar</Text>
-              </TouchableOpacity>
-          </View>
-        ;
-        break;
-    }
+    <View>
+      <Text style={styles.t_habitacion}>{item.nombreHabitacion}</Text>
+
+      <Text style={styles.textDescription}>{item.cant_camas}</Text>
+      <Text style={styles.textDescription}>{item.capacidad}</Text>
+      <Text style={styles.textDescription}>{item.num_habitacion}</Text>
+      <Text style={styles.precio}>{`$${item.precio}`}</Text>
+      <TouchableOpacity
+        style={styles.detailsButton}
+      onPress={() => removeCartItem(item)}
+      >
+        <Text style={styles.detailsButtonText}>Eliminar</Text>
+      </TouchableOpacity>
+    </View>
+   
+  </View>
+    ;
+  }
+ 
+    
+
+ 
+  
+
+    
     console.log(response);
     console.log("Aqui sigue bien");
     return(response);

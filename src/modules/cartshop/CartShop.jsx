@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 
 const Item = ({item}) => (
+  
   <View style={styles.row}>
               <Image source={{uri: item.imagen_elemento}} style={styles.imageCard} /> 
             
@@ -46,7 +47,7 @@ export default function CartShop({ route, navigation }) {
   
 
   
-  const calcularSubtotal = () => {
+  /*const calcularSubtotal = () => {
     let subtotal = 0;
     cartItems.forEach(item => {
         if (typeof item.precio === 'number') {
@@ -61,7 +62,22 @@ export default function CartShop({ route, navigation }) {
         }
     });
     return subtotal.toFixed(2);
+  };*/
+
+  const calcularSubtotal = () => {
+    let subtotal = 0;
+    cartItems.forEach(item => {
+      if (typeof item.precio === 'number') {
+        if (item.categoria && (item.categoria.nombrecategoria === 'Restaurante' || item.categoria.nombrecategoria === 'Miscelaneos')) {
+          subtotal += item.quantity * item.precio;
+        } else {
+          subtotal += item.precio;
+        }
+      }
+    });
+    return subtotal.toFixed(2);
   };
+  
   const calcularTotal = () => {
     const subtotal = parseFloat(calcularSubtotal());
     const impuestos = subtotal * 0.16; 
@@ -99,7 +115,7 @@ switch (item.categoria.id_categoria) {
               <Text style={styles.t_habitacion}>{item.nombre_producto}</Text>
 
               <Text style={styles.textDescription}>{descriptionSnippet}</Text>
-              <Text style={styles.precio}>{item.precio}</Text>
+              <Text style={styles.precio}>${item.precio}</Text>
               <TouchableOpacity
                 style={styles.detailsButton}
                 onPress={() => removeCartItem(item)}
@@ -109,7 +125,7 @@ switch (item.categoria.id_categoria) {
             </View>
             
           </View>;
-          
+          break;
 
       case 2:
         console.log("Case2");
@@ -193,6 +209,7 @@ switch (item.categoria.id_categoria) {
 
  
   
+
 
     
     console.log(response);

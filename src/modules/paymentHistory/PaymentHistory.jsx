@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PaymentHistoryCard = ({ item }) => {
 
+  
   return (
     <View style={styles.outerMargin}>
       <View style={styles.innerMargin}>
         <View style={styles.paymentItem}>
           <View style={styles.paymentItemContent}>
             <View style={styles.amountContainer}>
-              <Text style={styles.amountText}>Monto: ${total}</Text>
+              <Text style={styles.amountText}>Subtotal: ${item.subtotal}</Text>
+              <Text style={styles.amountText}>Impuestos: ${item.impuestos}</Text>
+              <Text style={styles.amountText}>Total: ${item.total}</Text>
             </View>
-            <Text>Fecha: {item.date.toLocaleString()}</Text>
+            <Text>Fecha de reserva: {item.fecha_reserva}</Text>
           </View>
         </View>
       </View>
@@ -19,13 +24,34 @@ const PaymentHistoryCard = ({ item }) => {
   );
 };
 
-const PaymentHistory = ({ paymentHistory }) => {
+const PaymentHistory = () => {
+
+  const [paymentHistory, setPaymentHistory] = useState([]);
+
+  useEffect(() => {
+    fetchPaymentHistory();
+  }, []);
+
+  const fetchPaymentHistory = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get("http://192.168.1.76:8080/api/historial/", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setPaymentHistory(response.data);
+    } catch (error) {
+      console.error("Error fetching payment history:", error);
+    }
+  };
+
   return (
     <FlatList
-      data={paymentHistory}
-      renderItem={({ item }) => <PaymentHistoryCard item={item} />}
-      keyExtractor={(item, index) => index.toString()}
-      contentContainerStyle={styles.container}
+    data={paymentHistory}
+    renderItem={({ item }) => <PaymentHistoryCard item={item} />}
+    keyExtractor={(item, index) => index.toString()}
+    contentContainerStyle={styles.container}
     />
   );
 };

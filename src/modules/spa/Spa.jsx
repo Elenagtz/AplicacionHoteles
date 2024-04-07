@@ -17,21 +17,32 @@ export default function Spa(props) {
 
     const { cartItems, addItemToCart, updateCartItem } = useContext(DataContext); 
 
-    const agregarCarrito = (item, quantity) => {
+    // const agregarCarrito = (item, quantity) => {
+    //     const itemIndex = cartItems.findIndex(cartItem => cartItem.id_producto === item.id_producto);
+    //     if (itemIndex !== -1) {
+    //         const updatedCartIntems = [...cartItems];
+           
+    //         updatedCartIntems[itemIndex].quantity += quantity;
+            
+    //         updateCartItem(updatedCartIntems[itemIndex]);
+            
+    //     } else {
+    //         addItemToCart({ ...item, quantity });
+    //     }
+    //     navigation.navigate('CartShop');
+    // };
+   
+    const agregarCarrito = (item) => {
         const itemIndex = cartItems.findIndex(cartItem => cartItem.id_producto === item.id_producto);
         if (itemIndex !== -1) {
             const updatedCartIntems = [...cartItems];
-           
-            updatedCartIntems[itemIndex].quantity += quantity;
-            
             updateCartItem(updatedCartIntems[itemIndex]);
-            
         } else {
-            addItemToCart({ ...item, quantity });
+            addItemToCart(item);
         }
         navigation.navigate('CartShop');
     };
-   
+    
 
 
       useEffect(() => {
@@ -39,7 +50,7 @@ export default function Spa(props) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 console.log('Token:', token);
-                const response = await axios.get('http://192.168.1.76:8080/api/elemento/', {
+                const response = await axios.get('http://192.168.0.10:8080/api/elemento/', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -90,7 +101,7 @@ export default function Spa(props) {
                     precio={`$${item.precio}`}
                     imagen_elemento={{uri: item.imagen_elemento}}
                     action={() => item.action()}
-                    customAction={(quantity) => agregarCarrito(item, quantity)}
+                    customAction={() => agregarCarrito(item)} 
                     /> )}
                 
                     keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}

@@ -26,8 +26,8 @@ export default function Login(props) {
         }
     }
             const enviarDatos = async (email, password) => {
-                const url = 'http://192.168.62.203:8080/api/auth/signin';
-            //const url = 'http://192.168.1.76:8080/api/auth/signin';
+                const url = 'http://192.168.0.10:8080/api/auth/signin';
+           // const url = 'http://192.168.1.76:8080/api/auth/signin';
 
                 const data = {
                     correo: email,
@@ -44,14 +44,13 @@ export default function Login(props) {
                 if (!response.data) {
                     throw new Error('No se recibieron datos del servidor');
                 }
-
-                const token = response.data.data.token; 
-                //const dataUser = response.data.usuario;
+                const token = response.data.data.token;
+                const dataUser = response.data;
                 console.log('Token recibido del servidor:', token);
                 console.log('Data recibida del servidor:', response.data);
 
                 await AsyncStorage.setItem('token', `Bearer ${token}`);
-                //await AsyncStorage.setItem('dataUser', JSON.stringify(dataUser));
+                await AsyncStorage.setItem('dataUser', JSON.stringify(dataUser));
                 setUpdate(true)
 
             

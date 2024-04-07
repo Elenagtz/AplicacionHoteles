@@ -23,27 +23,32 @@
             if (selectedDate) {
                 setCheckInDate(selectedDate);
                 const currentDate = new Date();
-                // Si hay una fecha de salida seleccionada y es menor o igual a la fecha de llegada, muestra un mensaje de error
-                if (checkOutDate && selectedDate >= checkOutDate) {
-                    setErrorMessage('La fecha de salida debe ser posterior a la fecha de llegada.');
-                } else if (selectedDate < currentDate) {
+                const maxCheckOutDate = new Date(selectedDate);
+                maxCheckOutDate.setDate(maxCheckOutDate.getDate() + 7); // Permitir un máximo de 7 días de estadía
+                
+                // Verificar si la fecha de llegada es válida
+                if (selectedDate < currentDate.setHours(0, 0, 0, 0)) {
                     setErrorMessage('La fecha de llegada debe ser posterior o igual a la fecha actual.');
                 } else {
                     setErrorMessage('');
                 }
+                
+                // Verificar si la fecha de salida seleccionada es mayor al máximo permitido
+                if (checkOutDate && checkOutDate > maxCheckOutDate) {
+                    setCheckOutDate(null);
+                }
             }
         };
         
-        
-        
         const handleCheckOutDateChange = (event, selectedDate) => {
             setShowCheckOutDatePicker(Platform.OS === 'ios');
-            const currentDate = new Date();
             if (selectedDate) {
-                // Si la fecha seleccionada es menor o igual a la fecha de llegada o igual a la fecha actual, muestra un mensaje de error
-                if (checkInDate && (selectedDate <= checkInDate || selectedDate <= currentDate)) {
-                    setErrorMessage('La fecha de salida debe ser posterior a la fecha de llegada y a la fecha actual.');
-                    setCheckOutDate(null); // Vaciar la fecha seleccionada
+                const maxCheckOutDate = new Date(checkInDate);
+                maxCheckOutDate.setDate(maxCheckOutDate.getDate() + 7); // Permitir un máximo de 7 días de estadía
+                
+                // Verificar si la fecha de salida es válida
+                if (selectedDate <= checkInDate || selectedDate > maxCheckOutDate) {
+                    setErrorMessage('La fecha de salida debe ser posterior a la fecha de llegada y dentro de los 7 días siguientes.');
                 } else {
                     setCheckOutDate(selectedDate);
                     setErrorMessage('');
@@ -51,7 +56,6 @@
             }
         };
         
-
         const showCheckInDatePickerModal = () => {
             setShowCheckInDatePicker(true);
             setShowCheckOutDatePicker(false); // Cerrar el selector de fecha de salida si está abierto

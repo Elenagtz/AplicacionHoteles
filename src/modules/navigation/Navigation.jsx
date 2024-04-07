@@ -55,7 +55,18 @@ export default function Navigation(props) {
             headerShown: false,
             headerTitle: props => <CustomHeaderTitle title="Real del Valle" />,
             headerTitleAlign: 'center',
-            title: "Cuenta"
+            title: "Inicia Sesión"
+          }}
+        />
+
+<Tab.Screen
+          name="CreateAccount"
+          component={() => <CreateAccount setUpdate={setUpdate} />}
+          options={{
+            headerShown: false,
+            headerTitle: props => <CustomHeaderTitle title="Real del Valle" />,
+            headerTitleAlign: 'center',
+            title: "Crea tu cuenta"
           }}
         />
 
@@ -76,7 +87,7 @@ const getIconName = (routeName, focused) => {
       iconName = focused ? 'account' : 'account-outline';
       break;
     case 'AuthStack':
-      iconName = focused ? 'account-circle' : 'account-circle';
+      iconName = focused ? 'login' : 'login';
       break;
   }
 

@@ -45,7 +45,7 @@ export default function FlatListRestaurant(props) {
                     <Text style={styles.quantityButton}>+</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.reserveButton} onPress={customAction}>
+            <TouchableOpacity style={styles.reserveButton} onPress={() => customAction(quantity)}>
                 <Text style={styles.reserveButtonText}>Agregar</Text>
             </TouchableOpacity>
         </View>
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 8
     },
+    
     imageCard: {
         width: 125,
         height: 125,

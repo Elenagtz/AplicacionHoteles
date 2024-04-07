@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, ImageBackground } from 'react-native';
 import PaymentHistory from "../../../paymentHistory/PaymentHistory";
+import axios from 'axios';
 import Hotel from '../../../../../assets/hotel.jpg';
 
 
 const Profile = () => {
-    const paymentHistory = [
+
+    const [paymentHistory, setPaymentHistory] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    /*const paymentHistory = [
         { amount: 10, date: new Date() },
         { amount: 20, date: new Date() },
         { amount: 30, date: new Date() },
@@ -14,7 +19,9 @@ const Profile = () => {
         { amount: 30, date: new Date() },
         { amount: 30, date: new Date() },
         { amount: 30, date: new Date() }
-    ];
+    ];*/
+
+    
 
     // Información del usuario
     const userInfo = {

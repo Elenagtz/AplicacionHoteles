@@ -24,11 +24,11 @@ export default function App() {
   },[update])
   if(session === null) return <Loading />
   // return session ? <NavigationOwner/> : <Navigation setUpdate={setUpdate}/>
- 
+
  //eliminar de aquí
   return (
     <CartProvider>
-      {session ? <NavigationOwner/> : <Navigation setUpdate={setUpdate}/>}
+      {session ? <NavigationOwner setUpdate={setUpdate}/> : <Navigation setUpdate={setUpdate}/>}
     </CartProvider>
   );
 //aquí

@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert } from "react-native";
 import Tarjeta from '../../../assets/tarjeta.png'
 import Modal from "react-native-modal";
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Importa AsyncStorage desde la biblioteca correspondiente
 
 
 
 const PayInfo = ({ route, navigation }) => {
+  const { subtotal, impuestos, total } = route.params;
 
 // const payment =()=>{
 //   const paymentInfo ={amount: total, date: new Date()};
@@ -27,14 +30,71 @@ const PayInfo = ({ route, navigation }) => {
     setIsButtonDisabled(!validateCardInfo());
   }, [cardInfo]);
 
-  const handlePayment = () => {
+ /* const handlePayment = () => {
     if (validateCardInfo()) {
       console.log("Información de la tarjeta:", cardInfo);
       setIsModalVisible(true);
     } else {
       Alert.alert("Error", "Por favor, complete correctamente todos los campos de la tarjeta.");
     }
+  };*/
+  /*const handlePayment = async () => {
+    if (validateCardInfo()) {
+      const paymentInfo = {
+        subtotal: subtotal,
+        impuestos: impuestos.toFixed(2),
+        total: total,
+        fecha_reserva: new Date().toISOString() 
+      };
+      try {
+        const response = await axios.post('http://192.168.1.76:8080/api/historial/', paymentInfo);
+        console.log("Respuesta del servidor:", response.data);
+        setIsModalVisible(true);
+      } catch (error) {
+        console.error("Error al enviar la información de pago:", error);
+        Alert.alert("Error", "Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo más tarde.");
+      }
+    } else {
+      Alert.alert("Error", "Por favor, complete correctamente todos los campos de la tarjeta.");
+    }
+  };*/
+
+  const handlePayment = async () => {
+    if (validateCardInfo()) {
+      const paymentInfo = {
+        subtotal: subtotal,
+        impuestos: impuestos.toFixed(2),
+        total: total,
+        fecha_reserva: new Date().toISOString() 
+      };
+      try {
+        const token = await AsyncStorage.getItem('token');
+        
+        if (!token) {
+          console.error("Error: No se encontró un token de autenticación.");
+          Alert.alert("Error", "No se encontró un token de autenticación. Inicia sesión nuevamente.");
+          return;
+        }
+  
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        };
+  
+        const response = await axios.post('http://192.168.1.76:8080/api/historial/', paymentInfo, config);
+        
+        console.log("Respuesta del servidor:", response.data);
+        setIsModalVisible(true);
+      } catch (error) {
+        console.error("Error al enviar la información de pago:", error);
+        Alert.alert("Error", "Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo más tarde.");
+      }
+    } else {
+      Alert.alert("Error", "Por favor, complete correctamente todos los campos de la tarjeta.");
+    }
   };
+  
 
   const validateCardInfo = () => {
     if (!cardInfo.cardNumber || !cardInfo.cardHolder || !cardInfo.expiryDate || !cardInfo.cvv) {
@@ -89,6 +149,7 @@ const PayInfo = ({ route, navigation }) => {
         <View style={styles.imageContainer}>
           <Image source={Tarjeta} style={styles.tarjetaImage}/>
         </View>
+        
         <TextInput
           style={styles.input}
           placeholder="Número de tarjeta"

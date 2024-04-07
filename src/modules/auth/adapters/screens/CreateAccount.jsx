@@ -4,12 +4,15 @@ import { Input, Button, Image, Icon } from "@rneui/base"
 import Fondo from '../../../../../assets/hotel.jpg'
 import Logo from '../../../../../assets/logo.png'
 import axios from 'axios';
-import { ScrollView } from "react-native-gesture-handler";
+import { useNavigation } from '@react-navigation/native'; // Importa useNavigation
+//import { ScrollView } from "react-native-gesture-handler";
 
 const DEFAULT_ROLE = 3;
 
 
-export default function CreateAccount({ navigation }) {
+export default function CreateAccount() {
+    const navigation = useNavigation(); // Obtén el objeto de navegación
+    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState(""); 
@@ -33,7 +36,7 @@ export default function CreateAccount({ navigation }) {
 
             // Puedes agregar más validaciones aquí, como el formato del correo electrónico, la seguridad de la contraseña, etc.
 
-            const url = 'http://192.168.109.111:8080/api/usuario/registro/';
+            const url = 'http://192.168.0.10:8080/api/usuario/registro/';
             const data = {
                 correo: email,
                 contrasena: password,
@@ -57,7 +60,7 @@ export default function CreateAccount({ navigation }) {
                 throw new Error('No se recibieron datos del servidor');
             }
 
-            navigation.navigate('Login');
+            navigation.navigate('Login'); // Navega a la pantalla de Login después de registrar
         } catch (error) {
             console.error('Error:', error.message);
             setShowMessage('Error al registrar, por favor intenta nuevamente');
@@ -66,7 +69,7 @@ export default function CreateAccount({ navigation }) {
     
 
     return (
-        <ScrollView>
+        //<ScrollView>
         <ImageBackground source={Fondo} style={styles.background}>
             <View style={styles.container}>
                 <Image
@@ -167,7 +170,7 @@ export default function CreateAccount({ navigation }) {
                 {showMessage ? <Text style={styles.errorMessage}>{showMessage}</Text> : null}
             </View>
         </ImageBackground>
-        </ScrollView>
+       // </ScrollView>
     );
 }
 

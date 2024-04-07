@@ -6,12 +6,13 @@ import Logo from '../../../../assets/logo.png';
 const Stack = createStackNavigator();
 
 
-export default function SearchStack() {
+export default function SearchStack(props) {
+    const { setUpdate } = props;    
   return (
     <Stack.Navigator initialRouteName='Search'>
     <Stack.Screen
         name='Search'
-        component={Search}
+        component={() => <Search setUpdate={setUpdate} />}
         options={{
             title: 'Buscar',
             headerStyle: {

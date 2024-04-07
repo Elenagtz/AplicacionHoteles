@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Image } from '@rneui/base';
 
+
 export default function FlatListRoom(props) {
     const { id, tipoHabitacion,nombre_habitacion, cant_camas, capacidad, precio,num_habitacion, imagen_hab, customAction, action } = props;
 

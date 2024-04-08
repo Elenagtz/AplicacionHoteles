@@ -44,25 +44,10 @@ const Item = ({item}) => (
 export default function CartShop({ route, navigation }) {
 
   const { cartItems, removeCartItem } = useContext(DataContext);
+
   
 
   
-  /*const calcularSubtotal = () => {
-    let subtotal = 0;
-    cartItems.forEach(item => {
-        if (typeof item.precio === 'number') {
-          if(item===item.categoria){
-                subtotal += item.categoria.nombrecategoria === 'Restaurante' || item.categoria.nombrecategoria === 'Miscelaneos'
-                ? item.quantity * item.precio
-                : item.precio;
-          }else{
-            subtotal += item.precio;
-          }
-            
-        }
-    });
-    return subtotal.toFixed(2);
-  };*/
 
   const calcularSubtotal = () => {
     let subtotal = 0;
@@ -217,6 +202,7 @@ switch (item.categoria.id_categoria) {
     return(response);
   };
   return (
+    
     <View style={styles.container}>
       <Text style={styles.title}>Detalles de Compra</Text>
       <FlatList
@@ -249,9 +235,22 @@ switch (item.categoria.id_categoria) {
         </View>
 
         <View style={{ flexDirection: "column", padding: 10 }}>
-          <TouchableOpacity style={styles.reserveButton} onPress={() => navigation.navigate('PayInfo', { cartItems: cartItems, subtotal: calcularSubtotal(), impuestos: calcularSubtotal() * 0.16, total: calcularTotal() })}>
-              <Text style={styles.reserveButtonText}>Pagar</Text>
-          </TouchableOpacity>
+          
+
+<TouchableOpacity 
+    style={styles.reserveButton} 
+    onPress={() => {
+        navigation.navigate('PayInfo', { 
+            cartItems: cartItems, 
+            subtotal: calcularSubtotal(), 
+            impuestos: calcularSubtotal() * 0.16, 
+            total: calcularTotal(),
+            selectedItems: cartItems.map(item => ({ id: item.id_producto||item.id_habitacion, nombre: item.nombre_producto||item.nombreHabitacion })),
+        })
+    }}
+>
+    <Text style={styles.reserveButtonText}>Pagar</Text>
+</TouchableOpacity>
 
 
         </View>

@@ -32,6 +32,7 @@ const PaymentHistory = () => {
     fetchPaymentHistory();
   }, []);
 
+
   const fetchPaymentHistory = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
@@ -49,7 +50,14 @@ const PaymentHistory = () => {
   return (
     <FlatList
     data={paymentHistory}
-    renderItem={({ item }) => <PaymentHistoryCard item={item} />}
+    renderItem={({ item }) => (
+    
+    <PaymentHistoryCard 
+      subtotal={item.subtotal}
+      impuestos={item.impuestos}
+      total={item.total}
+      item={item} />)}
+
     keyExtractor={(item, index) => index.toString()}
     contentContainerStyle={styles.container}
     />

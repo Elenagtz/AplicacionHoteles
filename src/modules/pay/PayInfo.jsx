@@ -9,7 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // Importa
 
 const PayInfo = ({ route, navigation }) => {
   const { subtotal, impuestos, total } = route.params;
-
 // const payment =()=>{
 //   const paymentInfo ={amount: total, date: new Date()};
 //   addPaymentHistory(paymentInfo);
@@ -62,10 +61,14 @@ const PayInfo = ({ route, navigation }) => {
   const handlePayment = async () => {
     if (validateCardInfo()) {
       const paymentInfo = {
-        subtotal: subtotal,
-        impuestos: impuestos.toFixed(2),
+       
         total: total,
-        fecha_reserva: new Date().toISOString() 
+        fecha_compra: new Date().toISOString(),
+        fecha_entrada: new Date().toISOString(), // Aquí deberías proporcionar la fecha de entrada deseada
+        fecha_salida: new Date().toISOString(), // Aquí deberías proporcionar la fecha de salida deseada
+        elementoIds: route.params.selectedItems.filter(item => item.id_producto).map(item => item.id_producto), // Filtramos solo los elementos que tienen un id_producto y mapeamos para obtener una lista de IDs
+        habitacionIds: route.params.selectedItems.filter(item => item.id_tipohab).map(item => item.id_tipohab) // Filtramos solo los elementos que tienen un id_tipohab y mapeamos para obtener una lista de IDs
+      
       };
       try {
         const token = await AsyncStorage.getItem('token');
@@ -82,7 +85,7 @@ const PayInfo = ({ route, navigation }) => {
           }
         };
   
-        const response = await axios.post('http://192.168.1.76:8080/api/historial/', paymentInfo, config);
+        const response = await axios.post('http://192.168.1.76:8080/api/reserva/', paymentInfo, config);
         
         console.log("Respuesta del servidor:", response.data);
         setIsModalVisible(true);
@@ -96,6 +99,8 @@ const PayInfo = ({ route, navigation }) => {
   };
   
 
+
+  
   const validateCardInfo = () => {
     if (!cardInfo.cardNumber || !cardInfo.cardHolder || !cardInfo.expiryDate || !cardInfo.cvv) {
       return false;
@@ -132,6 +137,13 @@ const PayInfo = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.resumen}>
         <Text style={styles.title}>Resumen</Text>
+        
+        {route.params.selectedItems.map(item => (
+    <View style={styles.resumenItem} key={item.id}>
+      <Text>{item.nombre}{item.nombreHabitacion} </Text>
+    </View>
+  ))}
+
         <View style={styles.resumenItem}>
           <Text>Subtotal: ${subtotal}</Text>
         </View>

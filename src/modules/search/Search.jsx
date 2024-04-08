@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState,FlatList } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 import Logo from '../../../assets/logo.png';
-import Spa from '../../../assets/spa.jpg';
 import { Image } from '@rneui/base';
 import PaymentHistory from '../paymentHistory/PaymentHistory';
 
 const Search = (props) => {
   const [userData, setUserData] = useState(null);
-  const [paymentHistory, setPaymentHistory] = useState([]);
-
   const {setUpdate} = props;
 
+ 
+  //Madre del usuario
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -32,19 +30,7 @@ const Search = (props) => {
 
   }, []);
 
-  const fetchPaymentHistory = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      const response = await axios.get("http://192.168.1.76:8080/api/historial/", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setPaymentHistory(response.data);
-    } catch (error) {
-      console.error("Error fetching payment historial:", error);
-    }
-  };
+  
 
   
   
@@ -58,6 +44,9 @@ const Search = (props) => {
     }
   };
 
+  //La madre  que hace que muestre el hisotiral:
+  
+ 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -70,13 +59,16 @@ const Search = (props) => {
             " "+ userData.data.usuario.apellidoM }</Text>
             <Text style={styles.userInfoText}>Correo Electrónico: {userData.data.usuario.correo}</Text> 
           </View>
-
-          <View>
+         
+            <View>
           <Text style={styles.title}>Historial de pagos</Text>
                               <View contentContainerStyle={styles.paymentHistoryContainer}>
-                                  <PaymentHistory paymentHistory={paymentHistory}/>
-                              </View>
+
+                               </View>
           </View>
+
+          
+          
           </View>
           
           </ScrollView>

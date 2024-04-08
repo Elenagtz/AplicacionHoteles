@@ -30,36 +30,7 @@ export default function Rooms(props) {
                         }
                         navigation.navigate('CartShop');
                     };
-   /* useEffect(() => {
-        const fetchElements = async () => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                console.log('Token:', token);
-                const response = await axios.get('http://192.168.108.94:8080/api/habitacion/', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-        
-                console.log('Response:', response);
-        
-                if (response && response.status === 200 && response.data && response.data.data && Array.isArray(response.data.data)) {
-                    console.log('Data received:', response.data.data);
-        
-                    // Establecer directamente los datos recibidos
-                    setElements(response.data.data);
-        
-                    console.log('Elements:', response.data.data);
-                } else {
-                    console.error('Error: No se recibieron datos válidos del servidor.');
-                }
-            } catch (error) {
-                console.error('Error fetching elements:', error);
-            }
-        };        
-    
-        fetchElements();
-    }, []);*/
+  
     
     useEffect(() => {
         const fetchElements = async () => {

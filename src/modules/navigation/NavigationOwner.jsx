@@ -3,19 +3,22 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeStack from "../stack/owner/HomeStack";
 import SearchStack from "../stack/owner/SearchStack";
-import CartStack from "../stack/owner/CartShopStack";
+import CartShopStack from "../stack/owner/CartShopStack";
 import { Icon } from "@rneui/base";
+import CartShop from "../cartshop/CartShop";
 const Tab = createBottomTabNavigator();
 
 export default function NavigationOwner(props) {
-  const { setUpdate } = props;
+  const { setUpdate, navigation } = props;
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             const { iconName, iconType } = getIconName(route.name, focused);
+            
             // Retornar un Icon de React Native Elements
+
             return (
               <Icon name={iconName} type={iconType} size={size} color={color} />
             );
@@ -44,7 +47,7 @@ export default function NavigationOwner(props) {
 
         <Tab.Screen
           name="CartStack"
-          component={CartStack}
+          component={() => <CartShopStack {...props} setUpdate={setUpdate} navigation={navigation} />}
           options={{
             headerShown: false,
             headerTitle: (props) => (

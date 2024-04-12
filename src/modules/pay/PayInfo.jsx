@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert } from "react-native";
 import Tarjeta from '../../../assets/tarjeta.png'
 import Modal from "react-native-modal";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Importa AsyncStorage desde la biblioteca correspondiente
 import * as MailComposer from 'expo-mail-composer';
+import {DataContext} from '../cartshop/DataContext';
 
 
-
-const PayInfo = ({ route, navigation }) => {
+const PayInfo = (props) => {
+  console.log("Funcionaraa?",props.setUpdate);
+  const {  route, navigation, setUpdate } = props;
   const { subtotal, impuestos, total } = route.params;
-// const payment =()=>{
-//   const paymentInfo ={amount: total, date: new Date()};
-//   addPaymentHistory(paymentInfo);
-//   navigation.goBack();
-// }
+  const { cartItems } = useContext(DataContext);
 
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
@@ -25,428 +23,59 @@ const PayInfo = ({ route, navigation }) => {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  
 
   useEffect(() => {
     setIsButtonDisabled(!validateCardInfo());
   }, [cardInfo]);
 
-  
-  /*const handlePayment = async () => {
-    if (validateCardInfo()) {
-      const paymentInfo = {
-        total: total,
-        total_productos: route.params.selectedItems.length, // Agrega el total de productos
-        fecha_compra: new Date().toISOString(),
-        fecha_entrada: "2024-05-01T14:00:00", // Ajusta la fecha de entrada deseada
-        fecha_salida: "2024-05-05T11:00:00", // Ajusta la fecha de salida deseada
-        usuarios: { id_usuario: 1 }, // Ajusta el objeto de usuario con el ID del usuario
-        elementos: route.params.selectedItems
-          .filter((item) => item.id_producto)
-          .map((item) => ({ id_elemento: item.id_producto })), // Mapea para obtener una lista de objetos de elemento con ID
-        habitaciones: route.params.selectedItems
-          .filter((item) => item.id_tipohab)
-          .map((item) => ({ id_habitacion: item.id_tipohab })), // Mapea para obtener una lista de objetos de habitación con ID
-      };
-  
-      try {
-        const token = await AsyncStorage.getItem("token");
-  
-        if (!token) {
-          console.error("Error: No se encontró un token de autenticación.");
-          Alert.alert(
-            "Error",
-            "No se encontró un token de autenticación. Inicia sesión nuevamente."
-          );
-          return;
-        }
-  
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json", 
-          },
-        };
-  
-        const response = await axios.post(
-          "http://192.168.1.76:8080/api/reserva/crear/",
-          paymentInfo,
-          config
-        );
-  
-        console.log("Respuesta del servidor:", response.data);
-        setIsModalVisible(true);
-      } catch (error) {
-        console.error("Error al enviar la información de pago:", error);
-        Alert.alert(
-          "Error",
-          "Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo más tarde."
-        );
-      }
-    } else {
-      Alert.alert(
-        "Error",
-        "Por favor, complete correctamente todos los campos de la tarjeta."
-      );
-    }
-  };*/
-  
-  
- /* const handlePayment = async () => {
-    if (validateCardInfo()) {
-      const paymentInfo = {
-        total: total,
-        total_productos: route.params.selectedItems.length,
-        fecha_compra: new Date().toISOString(),
-        fecha_entrada: "2024-05-01T14:00:00",
-        fecha_salida: "2024-05-05T11:00:00",
-        usuarios: { id_usuario: null }, 
-        elementos: route.params.selectedItems
-          .filter((item) => item.id_producto)
-          .map((item) => ({ id_elemento: item.id_producto })),
-        habitaciones: route.params.selectedItems
-          .filter((item) => item.id_tipohab)
-          .map((item) => ({ id_habitacion: item.id_tipohab })),
-      };
-  
-      try {
-        const token = await AsyncStorage.getItem("token");
-  
-        if (!token) {
-          console.error("Error: No se encontró un token de autenticación.");
-          Alert.alert(
-            "Error",
-            "No se encontró un token de autenticación. Inicia sesión nuevamente."
-          );
-          return;
-        }
-  
-        // Obtener el objeto de usuario del AsyncStorage
-        const userData = await AsyncStorage.getItem("dataUser");
-        if (!userData) {
-          console.error("Error: No se encontraron datos de usuario en el AsyncStorage.");
-          Alert.alert(
-            "Error",
-            "No se encontraron datos de usuario. Por favor, inicia sesión nuevamente."
-          );
-          return;
-        }
-        const userId = JSON.parse(userData).data.id; // Obtener el ID de usuario del objeto de usuario
-  
-        // Asignar el ID de usuario al objeto de pago
-        paymentInfo.usuarios.id_usuario = userId;
-  
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        };
-  
-        const response = await axios.post(
-          "http://192.168.1.76:8080/api/reserva/crear/",
-          paymentInfo,
-          config
-        );
-  
-        console.log("Respuesta del servidor:", response.data);
-        setIsModalVisible(true);
-      } catch (error) {
-        console.error("Error al enviar la información de pago:", error);
-        Alert.alert(
-          "Error",
-          "Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo más tarde."
-        );
-      }
-    } else {
-      Alert.alert(
-        "Error",
-        "Por favor, complete correctamente todos los campos de la tarjeta."
-      );
-    }
-  };
-  */
-  
-  
-  /*const handlePayment = async () => {
-    if (validateCardInfo()) {
-      const id = await AsyncStorage.getItem('id');
-  
-      const paymentInfo = {
-        total: total,
-        total_productos: route.params.selectedItems.length,
-        fecha_compra: new Date().toISOString(),
-        fecha_entrada: "2024-05-01T14:00:00", 
-        fecha_salida: "2024-05-05T11:00:00", 
-        usuario: {
-          id: id, 
-        },
-        elementos: route.params.selectedItems
-          .filter((item) => item.id_producto)
-          .map((item) => ({ id_elemento: item.id_producto })), 
-        habitaciones: route.params.selectedItems
-          .filter((item) => item.id_tipohab)
-          .map((item) => ({ id_habitacion: item.id_tipohab })), 
-      };
-  
-      try {
-        const token = await AsyncStorage.getItem("token");
-  
-        if (!token) {
-          console.error("Error: No se encontró un token de autenticación.");
-          Alert.alert(
-            "Error",
-            "No se encontró un token de autenticación. Inicia sesión nuevamente."
-          );
-          return;
-        }
-  
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        };
-  
-        const response = await axios.post(
-          "http://192.168.1.76:8080/api/reserva/crear/",
-          paymentInfo,
-          config
-        );
-  
-        console.log("Respuesta del servidor:", response.data);
-        setIsModalVisible(true);
-      } catch (error) {
-        console.error("Error al enviar la información de pago:", error);
-        Alert.alert(
-          "Error",
-          "Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo más tarde."
-        );
-      }
-    } else {
-      Alert.alert(
-        "Error",
-        "Por favor, complete correctamente todos los campos de la tarjeta."
-      );
-    }
-  };*/
-  /*const handlePayment = async () => {
-    if (validateCardInfo()) {
-        try {
-            const now = new Date();
-            const formattedDate = now.toISOString(); // Formatear la fecha al formato ISO8601
-            
-            // Obtener el id del usuario del AsyncStorage
-            const id_usuario = await AsyncStorage.getItem('id_usuario');
-            if (!id_usuario) {
-                console.error("Error: No se encontró un id de usuario en AsyncStorage.");
-                Alert.alert(
-                    "Error",
-                    "No se encontró un id de usuario. Inicia sesión nuevamente."
-                );
-                return;
-            }
 
-            const paymentInfo = {
-                total: total,
-                total_productos: route.params.selectedItems.length,
-                fecha_compra: formattedDate,
-                fecha_entrada: "2024-05-01T14:00:00", // Ajusta dinámicamente según tu lógica de negocio
-                fecha_salida: "2024-05-05T11:00:00", // Ajusta dinámicamente según tu lógica de negocio
-                usuario: {
-                    id_usuario: id_usuario,
-                },
-                elementos: route.params.selectedItems
-                    .filter((item) => item.id_producto)
-                    .map((item) => ({ id_elemento: item.id_producto })),
-                habitaciones: route.params.selectedItems
-                    .filter((item) => item.id_tipohab)
-                    .map((item) => ({ id_habitacion: item.id_tipohab })),
-            };
-
-            const token = await AsyncStorage.getItem("token");
-
-            if (!token) {
-                console.error("Error: No se encontró un token de autenticación.");
-                Alert.alert(
-                    "Error",
-                    "No se encontró un token de autenticación. Inicia sesión nuevamente."
-                );
-                return;
-            }
-
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            };
-
-            const response = await axios.post(
-                "http://192.168.0.10:8080/api/reserva/crear/",
-                paymentInfo,
-                config
-            );
-
-            console.log("Respuesta del servidor:", response.data);
-            setIsModalVisible(true);
-        } catch (error) {
-            console.error("Error al enviar la información de pago:", error);
-            Alert.alert(
-                "Error",
-                "Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo más tarde."
-            );
-        }
-    } else {
-        Alert.alert(
-            "Error",
-            "Por favor, complete correctamente todos los campos de la tarjeta."
-        );
-    }
-};*/
-
-/*const handlePayment = async () => {
-  if (validateCardInfo()) {
-      try {
-          const now = new Date();
-          const formattedDate = now.toISOString(); // Formatear la fecha al formato ISO8601
-          
-          const paymentInfo = {
-              total: total,
-              total_productos: route.params.selectedItems.length,
-              fecha_compra: formattedDate,
-              fecha_entrada: "2024-05-01T14:00:00", // Ajusta dinámicamente según tu lógica de negocio
-              fecha_salida: "2024-05-05T11:00:00", // Ajusta dinámicamente según tu lógica de negocio
-              usuario: {
-                  id_usuario: 1, // Asignar directamente el valor 1 al ID de usuario
-              },
-              elementos: route.params.selectedItems
-                  .filter((item) => item.id_producto)
-                  .map((item) => ({ id_elemento: item.id_producto })),
-              habitaciones: route.params.selectedItems
-                  .filter((item) => item.id_tipohab)
-                  .map((item) => ({ id_habitacion: item.id_tipohab })),
-          };
-
-          const token = await AsyncStorage.getItem("token");
-
-          if (!token) {
-              console.error("Error: No se encontró un token de autenticación.");
-              Alert.alert(
-                  "Error",
-                  "No se encontró un token de autenticación. Inicia sesión nuevamente."
-              );
-              return;
-          }
-
-          const config = {
-              headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-              },
-          };
-
-          const response = await axios.post(
-              "http://192.168.0.10:8080/api/reserva/crear/",
-              paymentInfo,
-              config
-          );
-
-          console.log("Respuesta del servidor:", response.data);
-          setIsModalVisible(true);
-      } catch (error) {
-          console.error("Error al enviar la información de pago:", error);
-          Alert.alert(
-              "Error",
-              "Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo más tarde."
-          );
-      }
-  } else {
-      Alert.alert(
-          "Error",
-          "Por favor, complete correctamente todos los campos de la tarjeta."
-      );
-  }
-};*/
+useEffect(() => {
+  console.log("A: ", setUpdate)
+})
 
 const handlePayment = async () => {
   if (validateCardInfo()) {
-      try {
-          const now = new Date();
-          const formattedDate = now.toISOString(); // Formatear la fecha al formato ISO8601
-          
-          // Obtener el id del usuario del AsyncStorage
-          const userDataJSON = await AsyncStorage.getItem('dataUser');
-          const userData = JSON.parse(userDataJSON);
+    const paymentInfo = {
+      subtotal: subtotal,
+      impuestos: impuestos.toFixed(2),
+      total: total,
+      fecha_reserva: new Date().toISOString(),
+    };
 
-          console.log("ID de usuario:", userData.data.usuario.id_usuario);
-
-          if (!id_usuario) {
-              console.error("Error: No se encontró un id de usuario en AsyncStorage.");
-              Alert.alert(
-                  "Error",
-                  "No se encontró un id de usuario. Inicia sesión nuevamente."
-              );
-              return;
-          }
-          
-console.log("ID de usuario:", id_usuario);
-          const a = await AsyncStorage.getItem("token");
-            console.log("Token de autenticación:", a);
-          const paymentInfo = {
-              total: total,
-              total_productos: route.params.selectedItems.length,
-              fecha_compra: formattedDate,
-              fecha_entrada: "2024-05-01T14:00:00", // Ajusta dinámicamente según tu lógica de negocio
-              fecha_salida: "2024-05-05T11:00:00", // Ajusta dinámicamente según tu lógica de negocio
-              usuario: {
-                  id_usuario: id_usuario.data.usuario.id_usuario, 
-              },
-              elementos: route.params.selectedItems
-                  .filter((item) => item.id_producto)
-                  .map((item) => ({ id_elemento: item.id_producto })),
-              habitaciones: route.params.selectedItems
-                  .filter((item) => item.id_tipohab)
-                  .map((item) => ({ id_habitacion: item.id_tipohab })),
-          };
-
-          const token = await AsyncStorage.getItem("token");
-
-          if (!token) {
-              console.error("Error: No se encontró un token de autenticación.");
-              Alert.alert(
-                  "Error",
-                  "No se encontró un token de autenticación. Inicia sesión nuevamente."
-              );
-              return;
-          }
-            
-          const config = {
-              headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-              },
-          };
-
-          const response = await axios.post(
-              "http://192.168.0.10:8080/api/reserva/crear/",
-              paymentInfo,
-              config
-          );
-
-          console.log("Respuesta del servidor:", response.data);
-          setIsModalVisible(true);
-      } catch (error) {
-          console.error("Error al enviar la información de pago:", error);
-          Alert.alert(
-              "Error",
-              "Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo más tarde."
-          );
+    try {
+      // Obtener el token de AsyncStorage
+      const token = await AsyncStorage.getItem('token');
+      
+      // Verificar si el token está presente
+      if (!token) {
+        throw new Error("No se encontró un token en el almacenamiento.");
       }
+
+      const response = await axios.post('http://192.168.0.10:8080/api/historial/', paymentInfo, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      console.log("Respuesta del servidor:", response.data);
+      setIsModalVisible(true);
+
+      // Limpiar elementos del carrito en AsyncStorage después de completar el pago
+      await AsyncStorage.removeItem('cartItems').then(() => {
+        console.log("Elementos del carrito eliminados correctamente.");
+        setUpdate(true)
+      }).catch((error) => {
+        console.error('Error al recargar:', error);
+        console.log("B: ", params.setUpdate)
+      })      
+
+    } catch (error) {
+      console.error("Error al enviar la información de pago:", error);
+      //Alert.alert("Error", "Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo más tarde.")
+    }
   } else {
-      Alert.alert(
-          "Error",
-          "Por favor, complete correctamente todos los campos de la tarjeta."
-      );
+    Alert.alert("Error", "Por favor, complete correctamente todos los campos de la tarjeta.");
   }
 };
 
@@ -541,12 +170,13 @@ console.log("ID de usuario:", id_usuario);
           onChangeText={(text) => setCardInfo({ ...cardInfo, cvv: text })}
           keyboardType="numeric"
         />
-        <TouchableOpacity 
-          style={[styles.reserveButton, isButtonDisabled && styles.disabledButton]} 
-          onPress={handlePayment}
-          disabled={isButtonDisabled}>
-          <Text style={styles.reserveButtonText}>Pagar</Text>
-        </TouchableOpacity>
+       <TouchableOpacity 
+  style={[styles.reserveButton, isButtonDisabled && styles.disabledButton]} 
+  onPress={handlePayment} // Aquí se llama a la función handlePayment
+  disabled={isButtonDisabled}>
+  <Text style={styles.reserveButtonText}>Pagar</Text>
+</TouchableOpacity>
+
       </View>
       <Modal isVisible={isModalVisible} animationIn="fadeIn" animationOut="fadeOut">
         <View style={styles.modalContainer}>

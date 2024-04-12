@@ -15,8 +15,9 @@ const PaymentHistoryCard = ({ item }) => {
               <Text style={styles.amountText}>Subtotal: ${item.subtotal}</Text>
               <Text style={styles.amountText}>Impuestos: ${item.impuestos}</Text>
               <Text style={styles.amountText}>Total: ${item.total}</Text>
+              <Text style={styles.amountText}>Fecha de reserva: {item.fecha_reserva}</Text>
             </View>
-            <Text>Fecha de reserva: {item.fecha_reserva}</Text>
+            
           </View>
         </View>
       </View>
@@ -36,7 +37,7 @@ const PaymentHistory = () => {
   const fetchPaymentHistory = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      const response = await axios.get("http://192.168.1.76:8080/api/historial/", {
+      const response = await axios.get("http://192.168.109.76:8080/api/historial/", {
         headers: {
           Authorization: `Bearer ${token}`
         }

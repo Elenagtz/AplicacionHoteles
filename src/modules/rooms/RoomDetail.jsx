@@ -5,15 +5,16 @@ import Carousel, {Pagination} from 'react-native-snap-carousel';
 export default function RoomDetail(props) {
     const {params} = props.route;
 
-    const carouselData = [
+
+     const carouselData = [
         { id: '1', image: require('../../../assets/hotel.jpg') },
         { id: '2', image: require('../../../assets/hotel.jpg') },
         { id: '3', image: require('../../../assets/hotel.jpg') }
-      ];
+       ];
     
       const renderCarouselItem = ({ item }) => {
         return (
-          <Image source={item.image} style={styles.carouselImage} />
+          <Image source={{ uri: item.imagen_hab }} style={styles.carouselImage} />
         );
       };
     
@@ -42,26 +43,20 @@ export default function RoomDetail(props) {
                   inactiveDotScale={0.8}
               />
               <View style={styles.additionalInfo}>
-        <Text style={styles.title}> Detalles de la Habitación</Text>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoText}>- {params.t_cama}</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoText}>- {params.capacidad}</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoText}>- Televisión pantalla plana</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoText}>- Almohadas de plumas</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoText}>- Baño privado con regadera</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoText}>- Ventilador de techo</Text>
-        </View>
-      </View>
+                <Text style={styles.title}> Detalles de la Habitación</Text>
+                <View style={styles.infoItem}>
+                    <Text style={styles.infoText}>- {params.cant_camas}</Text>
+                </View>
+                <View style={styles.infoItem}>
+                    <Text style={styles.infoText}>- {params.capacidad}</Text>
+                </View>
+                <View style={styles.infoItem}>
+                    <Text style={styles.infoText}>- {params.num_habitacion}</Text>
+                </View>
+                <View style={styles.infoItem}>
+                    <Text style={styles.infoText}>- {params.precio}</Text>
+                </View>
+            </View>
     </ScrollView>
   )
 }

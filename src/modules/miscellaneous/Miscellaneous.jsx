@@ -29,6 +29,8 @@ export default function Miscellaneous(props) {
                             updateCartItem(updatedCartIntems[itemIndex]);
                             
                         } else {
+                            console.log('`setUpdate` value after adding item:', props.setUpdate);
+
                             addItemToCart({ ...item, quantity });
                         }
                         navigation.navigate('CartShop');

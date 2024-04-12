@@ -16,7 +16,9 @@ import CartShop from '../../cartshop/CartShop.jsx'
 
 const Stack = createStackNavigator();
 
-export default function HomeStack() {
+export default function HomeStack(props) {
+    const { setUpdate, navigation, route } = props;
+
     return (
         <Stack.Navigator initialRouteName='Home'>
             <Stack.Screen
@@ -124,7 +126,8 @@ export default function HomeStack() {
             />
            <Stack.Screen
                 name='CartShop'
-                component={CartShop}
+                component={() => <CartShop {...props} setUpdate={setUpdate} navigation={navigation}/>}
+
                 options={{
                     title: 'Carrito',
                     headerStyle: {
@@ -139,10 +142,9 @@ export default function HomeStack() {
                 }}
             />
            
-
             <Stack.Screen
                 name='PayInfo'
-                component={PayInfo}
+                component={(props) => <PayInfo {...props} setUpdate={setUpdate} navigation={navigation}/>}
                 options={{
                     title: 'Pago',
                     headerStyle: {

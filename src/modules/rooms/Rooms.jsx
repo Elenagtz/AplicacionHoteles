@@ -70,7 +70,16 @@ export default function Rooms(props) {
     }, []);
     
     
-
+    const navigateToRoomDetail = (item) => {
+        navigation.navigate('RoomDetail', { 
+            t_habitacion: item.nombreHabitacion,
+            cant_camas: `Cant. de camas: ${item.cant_camas}`,
+            capacidad: `Capacidad: ${item.capacidad}`,
+            num_habitacion: `Num. de habitacion: ${item.num_habitacion}`,
+            precio: `$${item.precio}`,
+            imagen_hab: item.imagen_hab
+        });
+    };
 
   return (
     <View style={styles.container}>
@@ -94,7 +103,7 @@ export default function Rooms(props) {
                     num_habitacion={`Num. de habitacion: ${item.num_habitacion}`}
                     precio={`$${item.precio}`}
                     imagen_hab={item.imagen_hab}
-                    action={() => item.action()}
+                    action={() => navigateToRoomDetail(item)}
                     customAction={(quantity) => agregarCarrito(item, quantity)}                    />
             )}
 

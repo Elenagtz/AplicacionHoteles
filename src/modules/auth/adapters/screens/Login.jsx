@@ -34,7 +34,7 @@ export default function Login(props) {
 
 
     const enviarDatos = async (email, password) => {
-        const url = 'http://192.168.0.10:8080/api/auth/signin';
+        const url = 'http://192.168.109.76:8080/api/auth/signin';
 
         const data = {
             correo: email,
@@ -65,7 +65,7 @@ export default function Login(props) {
         }
     };
 
-    // Obtener el id de usuario desde alguna fuente, como una respuesta de autenticación
+ /*   // Obtener el id de usuario desde alguna fuente, como una respuesta de autenticación
 const id_usuario = obtenerIdDeUsuarioAlgunMetodo();
 
 // Guardar el id de usuario en AsyncStorage
@@ -79,7 +79,7 @@ const guardarIdUsuarioEnAsyncStorage = async (id_usuario) => {
 };
 
 // Llamar a la función para guardar el id de usuario
-guardarIdUsuarioEnAsyncStorage(id_usuario);
+guardarIdUsuarioEnAsyncStorage(id_usuario);*/
     return (
         <ImageBackground source={Fondo} style={styles.background}>
             <View style={styles.container}>

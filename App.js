@@ -25,6 +25,7 @@ export default function App() {
   if(session === null) return <Loading />
   // return session ? <NavigationOwner/> : <Navigation setUpdate={setUpdate}/>
 
+  useEffect
  //eliminar de aquí
   return (
     <CartProvider>

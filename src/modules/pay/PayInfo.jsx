@@ -6,14 +6,14 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Importa AsyncStorage desde la biblioteca correspondiente
 import * as MailComposer from 'expo-mail-composer';
 import {DataContext} from '../cartshop/DataContext';
+import { useNavigation } from "@react-navigation/native";
 
-
-const PayInfo = (props) => {
-  console.log("Funcionaraa?",props.setUpdate);
-  const {  route, navigation, setUpdate } = props;
+const PayInfo = ({route, setUpdate}) => {
+  const [reset , setReset] = useState(false)
+  const navigation = useNavigation();
+  const { cartItems,removeCartItem } = useContext(DataContext);
   const { subtotal, impuestos, total } = route.params;
-  const { cartItems } = useContext(DataContext);
-
+  console.log("datos", route.params);
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
     cardHolder: "",
@@ -31,11 +31,11 @@ const PayInfo = (props) => {
 
 
 useEffect(() => {
-  console.log("A: ", setUpdate)
+  console.log("lo que llega: ", setUpdate)
 })
 
 const handlePayment = async () => {
-  if (validateCardInfo()) {
+  if (true) {
     const paymentInfo = {
       subtotal: subtotal,
       impuestos: impuestos.toFixed(2),
@@ -52,7 +52,7 @@ const handlePayment = async () => {
         throw new Error("No se encontró un token en el almacenamiento.");
       }
 
-      const response = await axios.post('http://192.168.0.10:8080/api/historial/', paymentInfo, {
+      const response = await axios.post('http://192.168.108.193:8080/api/historial/', paymentInfo, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -96,6 +96,22 @@ const handlePayment = async () => {
     }
     return true;
   };
+
+  const handleReset =  async () =>{
+    setReset(true);
+    setIsModalVisible(false);
+    setCardInfo({
+      cardNumber: "",
+      cardHolder: "",
+      expiryDate: "",
+      cvv: ""
+    });
+    navigation.navigate('CartShop', reset);
+    await AsyncStorage.removeItem('cartItems');
+    cartItems.map(item => {
+      removeCartItem(item);
+    })
+  }
 
   const formatCardNumber = (input) => {
     // Eliminar caracteres no numéricos
@@ -183,7 +199,7 @@ const handlePayment = async () => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>¡Pago Exitoso!</Text>
             <Text style={styles.modalText}>¡Gracias por tu compra!</Text>
-            <TouchableOpacity style={styles.modalButton} onPress={() => setIsModalVisible(false)}>
+            <TouchableOpacity style={styles.modalButton} onPress={handleReset}>
               <Text style={styles.modalButtonText}>OK</Text>
             </TouchableOpacity>
           </View>

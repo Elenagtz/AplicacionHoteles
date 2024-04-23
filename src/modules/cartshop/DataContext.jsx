@@ -16,12 +16,13 @@ export const CartProvider = ({ children, ...props }) => {
     const loadCartItems = async () => {
       try {
         const storedCartItems = await AsyncStorage.getItem('cartItems');
+        console.log('tiene', storedCartItems);
         if (storedCartItems) {
           setCartItems(JSON.parse(storedCartItems));
         }
       } catch (error) {
         console.error('Error al cargar elementos del carrito:', error);
-      }
+      } 
     };
     loadCartItems();
   }, []);

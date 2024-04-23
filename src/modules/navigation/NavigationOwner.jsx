@@ -45,19 +45,7 @@ export default function NavigationOwner(props) {
           }}
         />
 
-        <Tab.Screen
-          name="CartStack"
-          component={() => <CartShopStack {...props} setUpdate={setUpdate} navigation={navigation} />}
-          options={{
-            headerShown: false,
-            headerTitle: (props) => (
-              <CustomHeaderTitle title="Real del Valle" />
-            ),
-            headerTitleAlign: "center",
-            title: "Carrito",
-          }}
-        />
-
+       
         <Tab.Screen
           name="SearchStack"
           component={() => <SearchStack setUpdate={setUpdate} />}

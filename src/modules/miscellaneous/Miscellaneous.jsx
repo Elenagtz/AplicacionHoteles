@@ -41,7 +41,7 @@ export default function Miscellaneous(props) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 console.log('Token:', token);
-                const response = await axios.get('http://192.168.1.76:8080/api/elemento/', {
+                const response = await axios.get('http://192.168.108.193:8080/api/elemento/', {
                     
                     headers: {
                         Authorization: `Bearer ${token}`

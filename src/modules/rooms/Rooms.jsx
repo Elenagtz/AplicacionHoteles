@@ -37,7 +37,7 @@ export default function Rooms(props) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 console.log('Token:', token);
-                const response = await axios.get('http://192.168.1.76:8080/api/habitacion/', {
+                const response = await axios.get('http://192.168.108.193:8080/api/habitacion/', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -98,7 +98,7 @@ export default function Rooms(props) {
                 renderItem={({ item }) => (
                     <FlatListRoom
                     tipoHabitacion={item.nombreHabitacion}
-                    cant_camas={`Cant. de camas{item.cant_camas}`}
+                    cant_camas={`Cant. de camas${item.cant_camas}`}
                     capacidad={`Capacidad ${item.capacidad}`}
                     num_habitacion={`Num. de habitacion: ${item.num_habitacion}`}
                     precio={`$${item.precio}`}

@@ -34,7 +34,7 @@ export default function Login(props) {
 
 
     const enviarDatos = async (email, password) => {
-        const url = 'http://192.168.109.76:8080/api/auth/signin';
+        const url = 'http://192.168.108.193:8080/api/auth/signin';
 
         const data = {
             correo: email,

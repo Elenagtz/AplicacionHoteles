@@ -74,7 +74,7 @@ const Search = (props) => {
         const token = await AsyncStorage.getItem("token");
         console.log("Token:", token);
         const response = await axios.get(
-          "http://192.168.109.76:8080/api/historial/",
+          "http://192.168.108.193:8080/api/historial/",
           {
             headers: {
               Authorization: `Bearer ${token}`,

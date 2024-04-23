@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect,useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Image, Icon } from "@rneui/base";
 import { DataContext } from "./DataContext";
-import _ from "lodash";
+import _, { replace } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
@@ -24,7 +24,7 @@ const Item = ({ item }) => (
         <Text style={styles.precio}>Cantidad: {item.quantity} </Text>
         <Text style={styles.precio}>
           Precio Total: ${calculateTotalPrice(item)}
-        </Text>
+        </Text> 
       </View>
 
       <TouchableOpacity onPress={() => removeCartItem(item)}>
@@ -34,8 +34,19 @@ const Item = ({ item }) => (
   </View>
 );
 
-export default function CartShop({ route, navigation }) {
-  const { cartItems, removeCartItem } = useContext(DataContext);
+export default function CartShop(props) {
+  const {route,cardReset} = props;
+  const [cartsReset, setCartsReset] = useState(false);
+    const { cartItems, removeCartItem } = useContext(DataContext);
+  const navigation = useNavigation();
+
+
+  const resetCarts = () =>{
+    cartItems.forEach((item) => {
+      cartItems.splice(item);
+    });
+  }
+
 
   const calcularSubtotal = () => {
     let subtotal = 0;
@@ -203,6 +214,15 @@ export default function CartShop({ route, navigation }) {
       );
     }
 
+    const handleReset = () => {
+      setIsModalVisible(false);
+      setCardInfo({
+        cardNumber: "",
+        cardHolder: "",
+        expiryDate: "",
+        cvv: "",
+      });
+    };
     console.log(response);
     console.log("Aqui sigue bien");
     return response;
@@ -254,11 +274,15 @@ export default function CartShop({ route, navigation }) {
                   id: item.id_producto || item.id_habitacion,
                   nombre: item.nombre_producto || item.nombreHabitacion,
                 })),
-              });
+              }, resetCarts()
+            
+            );
             }}
+           
           >
+            
             <Text style={styles.reserveButtonText}>Pagar</Text>
-          </TouchableOpacity>
+          </TouchableOpacity >
         </View>
 
         <View style={{ flexDirection: "column", padding: 5 }}>

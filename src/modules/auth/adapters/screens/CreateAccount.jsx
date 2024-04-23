@@ -51,7 +51,7 @@ export default function CreateAccount() {
 
       // Puedes agregar más validaciones aquí, como el formato del correo electrónico, la seguridad de la contraseña, etc.
 
-      const url = "http://192.168.109.76:8080/api/usuario/registro/";
+      const url = "http://192.168.108.193:8080/api/usuario/registro/";
       const data = {
         correo: email,
         contrasena: password,
